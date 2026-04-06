@@ -17,7 +17,7 @@ A user opens their todo list and can immediately see which incomplete todos are 
 
 **Acceptance Scenarios**:
 
-1. **Given** an incomplete todo with a due date in the past, **When** the user views the todo list, **Then** the todo is displayed with a distinct visual style (e.g., different color/badge/icon) that marks it as overdue.
+1. **Given** an incomplete todo with a due date in the past, **When** the user views the todo list, **Then** the todo is displayed with a red color change plus a text badge labeled "Overdue".
 2. **Given** an incomplete todo with a due date today or in the future, **When** the user views the todo list, **Then** the todo does not display any overdue indicator.
 3. **Given** a completed todo with a due date in the past, **When** the user views the todo list, **Then** the todo does not display an overdue indicator (completed tasks are not overdue).
 4. **Given** a todo with no due date, **When** the user views the todo list, **Then** the todo does not display any overdue indicator.
@@ -50,18 +50,19 @@ A user who completes an overdue todo sees the overdue indicator immediately disa
 
 ### Functional Requirements
 
-- **FR-001**: The system MUST display a distinct visual indicator on any incomplete todo whose due date is strictly before the current date.
+- **FR-001**: The system MUST display a distinct visual indicator — a red color change combined with an "Overdue" text badge — on any incomplete todo whose due date is strictly before the current date.
 - **FR-002**: The system MUST NOT display an overdue indicator on completed todos, regardless of their due date.
 - **FR-003**: The system MUST NOT display an overdue indicator on todos with no due date.
 - **FR-004**: The overdue indicator MUST disappear immediately when a user marks an overdue todo as complete.
 - **FR-005**: The overdue indicator MUST reappear immediately when a user marks a previously-overdue todo as incomplete (if the due date is still in the past).
 - **FR-006**: The overdue status MUST be recalculated based on the current date each time the todo list is rendered.
 - **FR-007**: The system MUST update the overdue indicator immediately when a todo's due date is edited to a new value.
+- **FR-008**: The "Overdue" badge MUST be accessible to screen readers via an appropriate `aria-label` attribute so assistive technologies can announce the overdue state.
 
 ### Key Entities
 
 - **Todo Item**: Represents a task with a title, optional due date, and a completion status. The overdue state is a derived attribute — not stored — computed by comparing the due date to the current date and the completion status.
-- **Due Date**: An optional date value on a Todo Item. When present and in the past relative to today, and the todo is incomplete, it makes the item overdue.
+- **Due Date**: An optional date value on a Todo Item, stored and compared as an **ISO 8601 date string (YYYY-MM-DD)**. When present and in the past relative to today, and the todo is incomplete, it makes the item overdue.
 
 ## Success Criteria *(mandatory)*
 
@@ -75,7 +76,18 @@ A user who completes an overdue todo sees the overdue indicator immediately disa
 ## Assumptions
 
 - A todo is overdue only if it is both **incomplete** and has a **due date strictly before today** (not including today).
-- The "current date" for overdue calculation is determined client-side at render time; no server-side overdue flag is stored.
+- The "current date" for overdue calculation is determined client-side at render time using the **user's local browser timezone**; no server-side overdue flag is stored.
 - The existing due date field on todos does not require any changes — no new data fields are introduced.
+- This is a **frontend-only change**; the `dueDate` field is already stored and returned by the backend with no backend modifications required.
 - This feature applies to the todo list view only; no overdue-specific filtering, sorting, or grouping is in scope for this version.
 - Mobile-specific optimization is out of scope — the visual indicator should be legible on desktop layouts.
+
+## Clarifications
+
+### Session 2026-04-06
+
+- Q: What form should the overdue visual indicator take? → A: Color change + text badge/label (red styling + "Overdue" badge)
+- Q: How should the current date be determined for overdue calculation? → A: Use local browser timezone
+- Q: Is backend involvement required for this feature? → A: Frontend-only; dueDate already supported by backend
+- Q: Should the overdue badge be accessible to screen readers? → A: Yes; badge must have aria-label for screen reader announcement
+- Q: What format should the dueDate field use? → A: ISO 8601 date string (YYYY-MM-DD)
