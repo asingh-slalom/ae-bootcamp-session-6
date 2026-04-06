@@ -4,6 +4,6 @@
   "here": true,
   "integration": "copilot",
   "preset": null,
-  "script": "ps",
+  "script": "sh",
   "speckit_version": "0.5.1.dev0"
 }
