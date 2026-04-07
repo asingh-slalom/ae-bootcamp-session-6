@@ -15,7 +15,7 @@
 
 **Purpose**: Create the `utils/` directory structure required by the implementation plan. No new packages or dependencies are required — the project already has all runtime and testing libraries installed.
 
-- [ ] T001 Create `packages/frontend/src/utils/` directory structure per implementation plan (plan.md § Project Structure)
+- [x] T001 Create `packages/frontend/src/utils/` directory structure per implementation plan (plan.md § Project Structure)
 
 ---
 
@@ -27,8 +27,8 @@
 
 > **TDD**: Write the test file first (T002), run it to confirm RED, then implement (T003) until GREEN.
 
-- [ ] T002 [P] Write unit tests covering all boundary conditions for `isOverdue` (past/today/future, completed/incomplete, null dueDate) in `packages/frontend/src/utils/__tests__/overdueUtils.test.js` — use `jest.useFakeTimers()` / `jest.setSystemTime()` to pin "today"
-- [ ] T003 Implement `isOverdue(dueDate, completed)` named export using local-timezone `YYYY-MM-DD` string comparison in `packages/frontend/src/utils/overdueUtils.js` (makes T002 GREEN)
+- [x] T002 [P] Write unit tests covering all boundary conditions for `isOverdue` (past/today/future, completed/incomplete, null dueDate) in `packages/frontend/src/utils/__tests__/overdueUtils.test.js` — use `jest.useFakeTimers()` / `jest.setSystemTime()` to pin "today"
+- [x] T003 Implement `isOverdue(dueDate, completed)` named export using local-timezone `YYYY-MM-DD` string comparison in `packages/frontend/src/utils/overdueUtils.js` (makes T002 GREEN)
 
 **Checkpoint**: Run `npm test --prefix packages/frontend -- --testPathPattern=overdueUtils` — all 5+ boundary-condition tests must pass before proceeding.
 
@@ -42,12 +42,12 @@
 
 ### Tests for User Story 1 ⚠️ Write FIRST — must FAIL before implementation
 
-- [ ] T004 [P] [US1] Add overdue-rendering tests to `packages/frontend/src/components/__tests__/TodoCard.test.js`: assert `todo-card--overdue` class and accessible `aria-label="Overdue"` badge appear for an overdue todo; assert neither appears for on-time, completed, or dateless todos — pin date with `jest.setSystemTime()`
+- [x] T004 [P] [US1] Add overdue-rendering tests to `packages/frontend/src/components/__tests__/TodoCard.test.js`: assert `todo-card--overdue` class and accessible `aria-label="Overdue"` badge appear for an overdue todo; assert neither appears for on-time, completed, or dateless todos — pin date with `jest.setSystemTime()`
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Update `packages/frontend/src/components/TodoCard.js` to import `isOverdue` from `../../utils/overdueUtils`, compute `const overdue = isOverdue(todo.dueDate, todo.completed)`, apply `todo-card--overdue` class to root `<div>` when `overdue` is true, and render `<span aria-label="Overdue" className="badge badge--overdue">Overdue</span>` inside `.todo-content` adjacent to `.todo-title` (contracts/ui-contracts.md § Output Contract)
-- [ ] T006 [US1] Add `.todo-card--overdue` and `.badge--overdue` CSS rules in `packages/frontend/src/App.css` using the existing `--danger` color token (`#c62828` light / `#ef5350` dark) from the design system — no new color values introduced (data-model.md § UI State Mapping)
+- [x] T005 [US1] Update `packages/frontend/src/components/TodoCard.js` to import `isOverdue` from `../../utils/overdueUtils`, compute `const overdue = isOverdue(todo.dueDate, todo.completed)`, apply `todo-card--overdue` class to root `<div>` when `overdue` is true, and render `<span aria-label="Overdue" className="badge badge--overdue">Overdue</span>` inside `.todo-content` adjacent to `.todo-title` (contracts/ui-contracts.md § Output Contract)
+- [x] T006 [US1] Add `.todo-card--overdue` and `.badge--overdue` CSS rules in `packages/frontend/src/App.css` using the existing `--danger` color token (`#c62828` light / `#ef5350` dark) from the design system — no new color values introduced (data-model.md § UI State Mapping)
 
 **Checkpoint**: Run `npm test --prefix packages/frontend -- --testPathPattern=TodoCard` — all US1 overdue-rendering assertions must pass. Manually verify the indicator appears/disappears in the browser for overdue vs on-time todos.
 
@@ -61,11 +61,11 @@
 
 ### Tests for User Story 2 ⚠️ Write FIRST — must FAIL before implementation
 
-- [ ] T007 [P] [US2] Add toggle-driven overdue state tests to `packages/frontend/src/components/__tests__/TodoCard.test.js`: assert overdue badge is absent after re-render with `completed: 1` (spec.md US2 scenario 1), and re-present after re-render with `completed: 0` (spec.md US2 scenario 2) — pin date with `jest.setSystemTime()`
+- [x] T007 [P] [US2] Add toggle-driven overdue state tests to `packages/frontend/src/components/__tests__/TodoCard.test.js`: assert overdue badge is absent after re-render with `completed: 1` (spec.md US2 scenario 1), and re-present after re-render with `completed: 0` (spec.md US2 scenario 2) — pin date with `jest.setSystemTime()`
 
 ### Implementation for User Story 2
 
-- [ ] T008 [US2] Confirm `packages/frontend/src/components/TodoCard.js` re-evaluates `isOverdue` on every render from live `todo.completed` prop — no new code expected if T005 implementation is correct; add a code comment documenting the reactive contract if not already present
+- [x] T008 [US2] Confirm `packages/frontend/src/components/TodoCard.js` re-evaluates `isOverdue` on every render from live `todo.completed` prop — no new code expected if T005 implementation is correct; add a code comment documenting the reactive contract if not already present
 
 **Checkpoint**: Run `npm test --prefix packages/frontend -- --testPathPattern=TodoCard` — all US1 and US2 tests must pass. Manually toggle an overdue todo in the browser and confirm the badge updates without a page reload.
 
@@ -75,9 +75,9 @@
 
 **Purpose**: End-to-end validation, accessibility spot-check, and quickstart verification.
 
-- [ ] T009 [P] Run the full frontend test suite and confirm no regressions: `npm test --prefix packages/frontend -- --watchAll=false --coverage` — coverage must remain ≥ 80%
-- [ ] T010 Validate all quickstart.md scenarios end-to-end in the running app (`npm start --prefix packages/frontend`) against the test cases in `specs/001-overdue-todo-support/quickstart.md`
-- [ ] T011 [P] Spot-check accessibility: verify the rendered "Overdue" badge has `aria-label="Overdue"` in DevTools and announces correctly in a screen reader or axe extension (FR-008, contracts/ui-contracts.md § Accessibility Contract)
+- [x] T009 [P] Run the full frontend test suite and confirm no regressions: `npm test --prefix packages/frontend -- --watchAll=false --coverage` — coverage must remain ≥ 80%
+- [x] T010 Validate all quickstart.md scenarios end-to-end in the running app (`npm start --prefix packages/frontend`) against the test cases in `specs/001-overdue-todo-support/quickstart.md`
+- [x] T011 [P] Spot-check accessibility: verify the rendered "Overdue" badge has `aria-label="Overdue"` in DevTools and announces correctly in a screen reader or axe extension (FR-008, contracts/ui-contracts.md § Accessibility Contract)
 
 ---
 

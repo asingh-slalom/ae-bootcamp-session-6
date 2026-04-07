@@ -99,4 +99,91 @@ describe('TodoCard Component', () => {
     
     expect(screen.queryByText(/Due:/)).not.toBeInTheDocument();
   });
+
+  // --- US1: Visual Overdue Indicators ---
+
+  describe('overdue indicator (US1)', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      // Pin "today" to 2026-04-07; yesterday (2026-04-06) is overdue
+      jest.setSystemTime(new Date('2026-04-07T12:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should add todo-card--overdue class and badge for an overdue incomplete todo', () => {
+      const overdueTodo = { ...mockTodo, dueDate: '2026-04-06', completed: 0 };
+      const { container } = render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+
+      const card = container.querySelector('.todo-card');
+      expect(card).toHaveClass('todo-card--overdue');
+
+      const badge = screen.getByLabelText('Overdue');
+      expect(badge).toBeInTheDocument();
+      expect(badge).toHaveClass('badge--overdue');
+    });
+
+    it('should NOT show overdue class or badge when todo is on-time', () => {
+      const onTimeTodo = { ...mockTodo, dueDate: '2026-04-08', completed: 0 };
+      const { container } = render(<TodoCard todo={onTimeTodo} {...mockHandlers} isLoading={false} />);
+
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('todo-card--overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should NOT show overdue class or badge when todo is completed (even if past due)', () => {
+      const completedOverdue = { ...mockTodo, dueDate: '2026-04-06', completed: 1 };
+      const { container } = render(<TodoCard todo={completedOverdue} {...mockHandlers} isLoading={false} />);
+
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('todo-card--overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should NOT show overdue class or badge when todo has no due date', () => {
+      const noDueDateTodo = { ...mockTodo, dueDate: null, completed: 0 };
+      const { container } = render(<TodoCard todo={noDueDateTodo} {...mockHandlers} isLoading={false} />);
+
+      const card = container.querySelector('.todo-card');
+      expect(card).not.toHaveClass('todo-card--overdue');
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+  });
+
+  // --- US2: Dynamic overdue indicator on toggle ---
+
+  describe('overdue indicator dynamic toggle (US2)', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2026-04-07T12:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should remove overdue badge when re-rendered with completed: 1', () => {
+      const overdueTodo = { ...mockTodo, dueDate: '2026-04-06', completed: 0 };
+      const { rerender } = render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+
+      expect(screen.getByLabelText('Overdue')).toBeInTheDocument();
+
+      rerender(<TodoCard todo={{ ...overdueTodo, completed: 1 }} {...mockHandlers} isLoading={false} />);
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+    });
+
+    it('should restore overdue badge when re-rendered with completed: 0', () => {
+      const overdueTodo = { ...mockTodo, dueDate: '2026-04-06', completed: 0 };
+      const { rerender } = render(<TodoCard todo={overdueTodo} {...mockHandlers} isLoading={false} />);
+
+      rerender(<TodoCard todo={{ ...overdueTodo, completed: 1 }} {...mockHandlers} isLoading={false} />);
+      expect(screen.queryByLabelText('Overdue')).not.toBeInTheDocument();
+
+      rerender(<TodoCard todo={{ ...overdueTodo, completed: 0 }} {...mockHandlers} isLoading={false} />);
+      expect(screen.getByLabelText('Overdue')).toBeInTheDocument();
+    });
+  });
 });

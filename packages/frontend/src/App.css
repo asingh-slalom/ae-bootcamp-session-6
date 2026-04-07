@@ -334,6 +334,22 @@ p {
   color: var(--success-color);
 }
 
+.todo-card--overdue {
+  border-color: var(--danger-color);
+}
+
+.badge--overdue {
+  display: inline-block;
+  margin-left: var(--space-xs, 4px);
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--danger-color);
+  border-radius: var(--radius-sm, 4px);
+  vertical-align: middle;
+}
+
 .todo-checkbox {
   width: 20px;
   height: 20px;
